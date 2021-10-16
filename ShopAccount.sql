@@ -1,3 +1,9 @@
+CREATE DATABASE [ShopAccount]
+GO
+
+USE [ShopAccount]
+GO
+
 /*** Table Article***/
 CREATE TABLE [dbo].[Article](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -42,6 +48,7 @@ CREATE TABLE [dbo].[Customer](
 	[Dob] [date] NULL,
 	[Gender] [nvarchar](10) NULL,
 	[LastLogin] [datetime] NULL,
+        [Active] [bit] NOT NULL,
 	[OTP] [varchar](32) NULL,
  CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
 (
@@ -290,3 +297,53 @@ CREATE TABLE [dbo].[Website](
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+ALTER TABLE [dbo].[Article]  WITH CHECK ADD  CONSTRAINT [FK_Article_Menu] FOREIGN KEY([MenuId])
+REFERENCES [dbo].[Menu] ([Id])
+GO
+ALTER TABLE [dbo].[Article] CHECK CONSTRAINT [FK_Article_Menu]
+GO
+ALTER TABLE [dbo].[Menu]  WITH CHECK ADD  CONSTRAINT [FK_Menu_Menu] FOREIGN KEY([ParentMenu])
+REFERENCES [dbo].[Menu] ([Id])
+GO
+ALTER TABLE [dbo].[Menu] CHECK CONSTRAINT [FK_Menu_Menu]
+GO
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Customer] FOREIGN KEY([CustomerCode])
+REFERENCES [dbo].[Customer] ([Code])
+GO
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Customer]
+GO
+ALTER TABLE [dbo].[OrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_OrderDetail_Order] FOREIGN KEY([OrderId])
+REFERENCES [dbo].[Order] ([Id])
+GO
+ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_Order]
+GO
+ALTER TABLE [dbo].[Product]  WITH CHECK ADD  CONSTRAINT [FK_Product_Menu] FOREIGN KEY([MenuId])
+REFERENCES [dbo].[Menu] ([Id])
+GO
+ALTER TABLE [dbo].[Product] CHECK CONSTRAINT [FK_Product_Menu]
+GO
+ALTER TABLE [dbo].[ProductAttribute]  WITH CHECK ADD  CONSTRAINT [FK_ProductAttribute_Attribute] FOREIGN KEY([AttributeId])
+REFERENCES [dbo].[Attribute] ([Id])
+GO
+ALTER TABLE [dbo].[ProductAttribute] CHECK CONSTRAINT [FK_ProductAttribute_Attribute]
+GO
+ALTER TABLE [dbo].[ProductAttribute]  WITH CHECK ADD  CONSTRAINT [FK_ProductAttribute_Product] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+GO
+ALTER TABLE [dbo].[ProductAttribute] CHECK CONSTRAINT [FK_ProductAttribute_Product]
+GO
+ALTER TABLE [dbo].[ProductImage]  WITH CHECK ADD  CONSTRAINT [FK_ProductImage_Product] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+GO
+ALTER TABLE [dbo].[ProductImage] CHECK CONSTRAINT [FK_ProductImage_Product]
+GO
+ALTER TABLE [dbo].[ProductRelated]  WITH CHECK ADD  CONSTRAINT [FK_ProductRelated_Product] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+GO
+ALTER TABLE [dbo].[ProductRelated] CHECK CONSTRAINT [FK_ProductRelated_Product]
+GO
+ALTER TABLE [dbo].[Review]  WITH CHECK ADD  CONSTRAINT [FK_Review_Product] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+GO
+ALTER TABLE [dbo].[Review] CHECK CONSTRAINT [FK_Review_Product]
